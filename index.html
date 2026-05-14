@@ -296,8 +296,8 @@
                 posY = Math.random() * (window.innerHeight - size);
             } while (
                 // Tránh vùng chữ nhật ở giữa màn hình (nơi đặt thiệp)
-                posX > window.innerWidth * 0.4 && posX < window.innerWidth * 0.6 &&
-                posY > window.innerHeight * 0.4 && posY < window.innerHeight * 0.6
+                posX > window.innerWidth * 0.25 && posX < window.innerWidth * 0.75 &&
+                posY > window.innerHeight * 0.15 && posY < window.innerHeight * 0.85
             );
 
             imgEl.style.left = posX + 'px';
