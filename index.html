@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Moonie! 🌙</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&family=Pacifico&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-top: #0f2027;
+            --bg-mid: #203a43;
+            --bg-bottom: #2c5364;
+            --moon-yellow: #fde887;
+            --text-light: #f4f4f9;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: linear-gradient(to bottom, var(--bg-top), var(--bg-mid), var(--bg-bottom));
+            background-attachment: fixed;
+            font-family: 'Nunito', sans-serif;
+            color: var(--text-light);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden; /* Ẩn thanh cuộn để hiệu ứng bay mượt hơn */
+            position: relative;
+        }
+
+        /* Bầu trời sao */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            animation: twinkle infinite alternate;
+        }
+
+        /* ================= KHI CHƯA MỞ QUÀ ================= */
+        #gift-screen {
+            position: absolute;
+            z-index: 50;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.5s ease;
+        }
+
+        .gift-box {
+            font-size: 100px;
+            animation: shake 2s infinite cubic-bezier(.36,.07,.19,.97) both;
+            filter: drop-shadow(0 0 20px rgba(253, 232, 135, 0.5));
+            transition: transform 0.3s ease;
+        }
+
+        .gift-box:hover {
+            transform: scale(1.1);
+        }
+
+        .click-text {
+            font-family: 'Pacifico', cursive;
+            font-size: 1.5em;
+            color: var(--moon-yellow);
+            margin-top: 20px;
+            animation: pulse 1.5s infinite;
+        }
+
+        /* ================= KHI ĐÃ MỞ QUÀ ================= */
+        #main-content {
+            display: none; /* Ẩn lúc ban đầu */
+            flex-direction: column;
+            align-items: center;
+            z-index: 10;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        #main-content.show {
+            display: flex;
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .greeting-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+            max-width: 90%;
+            width: 600px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), 0 0 40px rgba(253, 232, 135, 0.2);
+        }
+
+        h1 {
+            font-family: 'Pacifico', cursive;
+            color: var(--moon-yellow);
+            font-size: 2.8em;
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: 1em;
+            letter-spacing: 3px;
+            color: #a8c0ff;
+            margin-bottom: 25px;
+        }
+
+        p {
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 0;
+        }
+
+        /* Khung ảnh chính giữa (Tùy chọn) */
+        .center-photo {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 20px auto;
+            border-radius: 50%;
+            border: 4px solid var(--moon-yellow);
+            box-shadow: 0 0 20px var(--moon-yellow);
+            overflow: hidden;
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .center-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* ================= HIỆU ỨNG ẢNH BAY BACKGROUND ================= */
+        .floating-bg-img {
+            position: absolute;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3), 0 0 15px rgba(255,255,255,0.2);
+            object-fit: cover;
+            opacity: 0;
+            z-index: 2; /* Nằm dưới nội dung chính */
+            border: 2px solid rgba(255,255,255,0.4);
+            animation: floatUpAndFade 6s linear forwards;
+            pointer-events: none;
+        }
+
+        /* ================= ANIMATIONS ================= */
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0) rotate(-2deg); }
+            20%, 80% { transform: translate3d(2px, 0, 0) rotate(2deg); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0) rotate(-4deg); }
+            40%, 60% { transform: translate3d(4px, 0, 0) rotate(4deg); }
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.6; transform: scale(0.95); }
+            50% { opacity: 1; transform: scale(1.05); }
+            100% { opacity: 0.6; transform: scale(0.95); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        @keyframes twinkle {
+            0% { opacity: 0.2; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1.2); }
+        }
+
+        @keyframes floatUpAndFade {
+            0% { 
+                opacity: 0; 
+                transform: translateY(50px) scale(0.5) rotate(-10deg); 
+            }
+            20% { 
+                opacity: 0.7; 
+            }
+            80% { 
+                opacity: 0.7; 
+            }
+            100% { 
+                opacity: 0; 
+                transform: translateY(-200px) scale(1.1) rotate(10deg); 
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="stars" id="stars"></div>
+
+    <iframe id="youtube-player" width="0" height="0" src="https://www.youtube.com/watch?v=AfNbehFKJ7o&list=RDAfNbehFKJ7o&start_radio=1" frameborder="0" allow="autoplay"></iframe>
+
+    <div id="gift-screen" onclick="openGift()">
+        <div class="gift-box">🎁</div>
+        <div class="click-text">Chạm để mở quà nhé Moonie!</div>
+    </div>
+
+    <div id="main-content">
+        <div class="greeting-card">
+            
+            <div class="center-photo">
+                <img src='images/image11.jpg' alt="Moonie">
+            </div>
+
+            <h1>Chúc mừng sinh nhật, Moonie! 🌙</h1>
+            <div class="subtitle">15.05.2005 - 15.05.2026</div>
+            <p>Chúc em tuổi mới rạng rỡ như ánh trăng. Hãy luôn mỉm cười thật tươi, giữ trọn sự dịu dàng và mạnh mẽ để đạt được mọi điều em mơ ước!</p>
+            <p>✨Năm sau lại đón sinh nhật cùng anh nhé, yêu em✨</p>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // KHU VỰC CÀI ĐẶT ẢNH CỦA BẠN
+        // ==========================================
+        // Điền tên các file ảnh bạn muốn bay lơ lửng xung quanh vào danh sách này.
+        // Bạn có thể thêm bao nhiêu hình tùy thích, nhớ đặt trong dấu nháy đơn và cách nhau bằng dấu phẩy.
+        
+
+        const soLuongAnh = 26; // Tổng số ảnh bạn đang có
+        
+        // CHÚ Ý: Theo hình ảnh bạn chụp, có vẻ các file ảnh đang nằm CÙNG CHỖ với file index.html 
+        // chứ không nằm trong thư mục "images" nữa. 
+        // - Nếu ảnh nằm trong thư mục images: giữ nguyên 'images/'
+        // - Nếu ảnh nằm chung với file index.html: đổi thành '' (2 dấu nháy đơn viết sát nhau)
+        const tenThuMuc = 'images/'; 
+        
+        const danhSachHinhAnh = [];
+        
+        for (let i = 1; i <= soLuongAnh; i++) {
+            if (i === 1) {
+                // Xử lý riêng cho file đầu tiên vì đuôi của nó là .jpeg
+                danhSachHinhAnh.push(`${tenThuMuc}image${i}.jpeg`);
+            } else {
+                // Các file từ số 2 trở đi đuôi là .jpg
+                danhSachHinhAnh.push(`${tenThuMuc}image${i}.jpg`);
+            }
+        }
+        // ==========================================
+
+
+        // 1. Tạo bầu trời sao động
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            for (let i = 0; i < 80; i++) {
+                let star = document.createElement('div');
+                star.className = 'star';
+                star.style.top = Math.random() * 100 + 'vh';
+                star.style.left = Math.random() * 100 + 'vw';
+                star.style.width = star.style.height = (Math.random() * 3 + 1) + 'px';
+                star.style.animationDuration = (Math.random() * 2 + 1) + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+
+        // 2. Hàm tạo ảnh bay lơ lửng ngẫu nhiên
+        function spawnFloatingImage() {
+            if(danhSachHinhAnh.length === 0) return; // Nếu không có ảnh thì bỏ qua
+
+            // Chọn ngẫu nhiên 1 ảnh trong danh sách
+            const randomImgSrc = danhSachHinhAnh[Math.floor(Math.random() * danhSachHinhAnh.length)];
+            
+            const imgEl = document.createElement('img');
+            imgEl.src = randomImgSrc;
+            imgEl.className = 'floating-bg-img';
+            
+            // Random kích thước từ 80px đến 150px
+            const size = Math.floor(Math.random() * 170) + 180;
+            imgEl.style.width = size + 'px';
+            imgEl.style.height = size + 'px';
+
+            // Random vị trí xuất hiện (tránh khu vực chính giữa màn hình)
+            let posX, posY;
+            do {
+                posX = Math.random() * (window.innerWidth - size);
+                posY = Math.random() * (window.innerHeight - size);
+            } while (
+                // Tránh vùng chữ nhật ở giữa màn hình (nơi đặt thiệp)
+                posX > window.innerWidth * 0.4 && posX < window.innerWidth * 0.6 &&
+                posY > window.innerHeight * 0.4 && posY < window.innerHeight * 0.6
+            );
+
+            imgEl.style.left = posX + 'px';
+            imgEl.style.top = posY + 'px';
+
+            document.body.appendChild(imgEl);
+
+            // Xóa ảnh khỏi DOM sau khi kết thúc animation (6 giây) để không làm nặng web
+            setTimeout(() => {
+                imgEl.remove();
+            }, 6000);
+        }
+
+        // 3. Hàm xử lý khi click vào Hộp Quà
+        let backgroundSpawner;
+        function openGift() {
+            // Ẩn hộp quà
+            const giftScreen = document.getElementById('gift-screen');
+            giftScreen.style.transform = 'scale(0) rotate(180deg)';
+            giftScreen.style.opacity = '0';
+            
+            setTimeout(() => {
+                giftScreen.style.display = 'none';
+                
+                // Hiển thị thiệp chúc mừng
+                const mainContent = document.getElementById('main-content');
+                mainContent.classList.add('show');
+                
+                // Kích hoạt nhạc YouTube
+                const iframe = document.getElementById('youtube-player');
+                iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+
+                // Bắt đầu thả ảnh bay lơ lửng (cứ 1.5 giây xuất hiện 1 ảnh)
+                spawnFloatingImage(); // Thả ảnh đầu tiên ngay lập tức
+                backgroundSpawner = setInterval(spawnFloatingImage, 1500);
+
+            }, 500); // Đợi 0.5s cho hiệu ứng ẩn hộp quà
+        }
+
+        // Khởi chạy khi tải trang
+        window.onload = () => {
+            createStars();
+        };
+    </script>
+</body>
+</html>
