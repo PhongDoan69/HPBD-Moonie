@@ -208,7 +208,8 @@
 
     <div class="stars" id="stars"></div>
 
-    <iframe id="youtube-player" width="0" height="0" src="https://www.youtube.com/watch?v=AfNbehFKJ7o&list=RDAfNbehFKJ7o&start_radio=1" frameborder="0" allow="autoplay"></iframe>
+    <audio id="bg-music" src="NGÀY ĐẦU TIÊN - ĐỨC PHÚC _ DANCE PERFORMANCE [AfNbehFKJ7o] (1).mp3"></audio>
+
 
     <div id="gift-screen" onclick="openGift()">
         <div class="gift-box">🎁</div>
@@ -327,8 +328,8 @@
                 mainContent.classList.add('show');
                 
                 // Kích hoạt nhạc YouTube
-                const iframe = document.getElementById('youtube-player');
-                iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+               document.getElementById('bg-music').play();
+               
 
                 // Bắt đầu thả ảnh bay lơ lửng (cứ 1.5 giây xuất hiện 1 ảnh)
                 spawnFloatingImage(); // Thả ảnh đầu tiên ngay lập tức
